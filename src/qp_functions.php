@@ -149,8 +149,25 @@
  * @return \QueryPath\DOMQuery
  *  Or possibly another QueryPath-like object if you overrode QueryPath_class.
  */
-function qp($document = NULL, $string = NULL, $options = array()) {
-    return QueryPath::with($document, $string, $options);
+
+
+function qp($document = NULL, $string = NULL, $options = array())
+{
+    $options += array(
+        'ignore_parser_warnings' => TRUE,
+        'convert_from_encoding'  => 'utf-8',
+        'convert_to_encoding'    => 'HTML-ENTITIES',
+        'use_parser'             => 'html',
+    );
+    if ($options['use_parser'] == 'xml') {
+        unset($options['convert_to_encoding']);
+    }
+    // if (userIsAdmin) {
+    //     pre($options);die;
+    // }
+    $qpClass = isset($options['QueryPath_class']) ? $options['QueryPath_class'] : 'QueryPath';
+
+    return @new $qpClass($document, $string, $options);
 }
 
 /**
@@ -177,9 +194,17 @@ function qp($document = NULL, $string = NULL, $options = array()) {
  * @ingroup querypath_core
  * @see qp()
  */
-function htmlqp($document = NULL, $selector = NULL, $options = array()) {
+function htmlqp($document = NULL, $selector = NULL, $options = array())
+{
+    $options += array(
+        'ignore_parser_warnings' => TRUE,
+        'convert_from_encoding'  => 'utf-8',
+        'convert_to_encoding'    => 'HTML-ENTITIES',
+        'strip_low_ascii'        => true,
+        'use_parser'             => 'html',
 
-  return QueryPath::withHTML($document, $selector, $options);
+    );
+    return @qp($document, $selector, $options);
 }
 
 /**
