@@ -68,7 +68,7 @@ class DOMQuery implements \QueryPath\Query, \IteratorAggregate, \Countable {
   /**
    * The array of matches.
    */
-  protected $matches = array();
+  public $matches = array();
   /**
    * The last array of matches.
    */
